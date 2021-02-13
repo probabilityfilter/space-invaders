@@ -34,7 +34,22 @@ class Ship:
         self.cool_down_counter = 0
 
     def draw(self, window):
-        pygame.draw.rect(window, (255,0,0), (self.x, self.y, 50, 100))
+        # pygame.draw.rect(window, (255,0,0), (self.x, self.y, 50, 100))
+        window.blit(self.ship_img, (self.x, self.y))
+
+    def get_width(self):
+        return self.ship_img.get_width()
+
+    def get_height(self):
+        return self.ship_img.get_height()
+
+class Player(Ship):
+    def __init__(self, x, y, health=100):
+        super().__init__(x, y, health)
+        self.ship_img = yellowSpaceShip
+        self.laser_img = yellowLaser
+        self.mask = pygame.mask.from_surface(self.ship_img)
+        self.max_health = health
 
 def main():
     run = True
@@ -45,7 +60,7 @@ def main():
     
     player_vel = 5
     
-    ship = Ship(300,650)
+    player = Player(300,650)
 
     clock = pygame.time.Clock()
 
@@ -58,7 +73,7 @@ def main():
         win.blit(lives_label, (10, 10))
         win.blit(level_label, (wd - level_label.get_width() - 10, 10))
 
-        ship.draw(win)
+        player.draw(win)
         pygame.display.update()
 
     while run:
@@ -70,12 +85,12 @@ def main():
                 run = False
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT] and ship.x - player_vel > 0: #left
-            ship.x -= player_vel
-        if keys[pygame.K_RIGHT] and ship.x + player_vel < wd: #right
-            ship.x += player_vel
-        if keys[pygame.K_UP] and ship.y - player_vel > 0: #up
-            ship.y -= player_vel
-        if keys[pygame.K_DOWN] and ship.y + player_vel < ht: #down
-            ship.y += player_vel
+        if keys[pygame.K_LEFT] and player.x - player_vel > 0: #left
+            player.x -= player_vel
+        if keys[pygame.K_RIGHT] and player.x + player_vel + player.get_width() < wd: #right
+            player.x += player_vel
+        if keys[pygame.K_UP] and player.y - player_vel > 0: #up
+            player.y -= player_vel
+        if keys[pygame.K_DOWN] and player.y + player_vel + player.get_height() < ht: #down
+            player.y += player_vel
 main()
