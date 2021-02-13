@@ -85,6 +85,8 @@ def main():
 
     clock = pygame.time.Clock()
 
+    lost = False
+
     def redraw_window():
         win.blit(bg, (0,0))
         #draw text
@@ -94,12 +96,24 @@ def main():
         win.blit(lives_label, (10, 10))
         win.blit(level_label, (wd - level_label.get_width() - 10, 10))
 
+        for enemy in enemies:
+            enemy.draw(win)
         player.draw(win)
+
         pygame.display.update()
 
     while run:
         clock.tick(fps)
-        redraw_window()
+
+        if lives <= 0 or player.health <= 0:
+            lost = True
+
+        if len(enemies) == 0:
+            level += 1
+            wave_length += 5
+            for i in range(wave_length):
+                enemy = Enemy(random.randrange(50, wd-100), random.randrange(-1500, -100), random.choice(["red", "blue", "green"]))
+                enemies.append(enemy)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -114,4 +128,12 @@ def main():
             player.y -= player_vel
         if keys[pygame.K_DOWN] and player.y + player_vel + player.get_height() < ht: #down
             player.y += player_vel
+
+        for enemy in enemies[:]:
+            enemy.move(enemy_vel)
+            if enemy.y + enemy.get_height() > ht:
+                lives -= 1
+                enemies.remove(enemy)
+
+        redraw_window()
 main()
