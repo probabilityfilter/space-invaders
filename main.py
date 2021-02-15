@@ -91,6 +91,7 @@ def main():
     enemies = []
     wave_length = 0
     enemy_vel = 1
+    lasers = []
     
     player_vel = 5
     
@@ -112,6 +113,9 @@ def main():
 
         for enemy in enemies:
             enemy.draw(win)
+
+        for laser in lasers:
+            laser.draw(win)
 
         player.draw(win)
 
@@ -155,6 +159,13 @@ def main():
             player.y -= player_vel
         if keys[pygame.K_DOWN] and player.y + player_vel + player.get_height() < ht: #down
             player.y += player_vel
+
+        if keys[pygame.K_SPACE]:
+            laser = Laser(player.x, player.y, "red")
+            lasers.append(laser)
+
+        for laser in lasers[:]:
+            laser.move(-5)
 
         for enemy in enemies[:]:
             enemy.move(enemy_vel)
