@@ -23,6 +23,19 @@ yellowLaser = pygame.image.load(os.path.join("assets", "pixel_laser_yellow.png")
 
 bg = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background-black.png")), (wd,ht))
 
+class Laser():
+    def __init__(self, x, y, color):
+        self.x = x
+        self.y = y
+        self.color = color
+        self.laser_img = redLaser
+
+    def draw(self, window):
+        window.blit(self.laser_img, (self.x, self.y))
+
+    def move(self, vel):
+        self.y += vel
+
 class Ship:
     def __init__(self, x, y, health=100):
         self.x = x
